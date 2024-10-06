@@ -6,6 +6,7 @@ import {TodoService} from "../core/services/todo.service";
 import {Subscription} from "rxjs";
 import {TodoApiService} from "../core/services/todo-api.service";
 import {subscribe} from "node:diagnostics_channel";
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -26,24 +27,30 @@ export class TodoListComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.sub = this.todoService.todoChange.subscribe({
-      next: todoList => {this.todos = todoList}
+      next: todoList => this.todos = todoList
     });
 
     if (this.todos.length === 0) {
       this.todoApiService.getTodos().subscribe({
         next: todos => {
-          // console.log(todos)
           this.todos = todos;
+        },
+        error: err => {
+          this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
         }
       })
     }
   }
 
   addTodo(todo: string) : void {
-    if(todo.length <= 3){
-      this.errorMessage = 'Zadanie powinno mieć co najmniej 4 znaki';
-      return;
-    }
+    this.todoApiService.postTodo({name: todo, isComplete: false}).subscribe({
+      next: value => {
+        console.log(value)
+      },
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
+      }
+    })
     this.todoService.addTodo(todo);
     // this.todos = this.todoService.getTodos;
   }

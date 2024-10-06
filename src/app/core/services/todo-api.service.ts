@@ -17,4 +17,8 @@ export class TodoApiService {
     );
   }
 
+  postTodo(todo: Omit<Todo, "id">): Observable<Todo> {
+    return this.http.post<Todo>('http://localhost:3000/todo', todo);
+  }
+
 }
