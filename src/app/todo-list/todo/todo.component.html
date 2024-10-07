@@ -12,7 +12,7 @@
 </li>
 
 
-<app-modal (close)="toggleModal()" [title]="'Czy na pewno chce usunąć zadanie o numerze ' + (i + 1) + ' ?'" *ngIf="openModal">
+<app-modal (close)="toggleModal()" [title]="'Czy na pewno chce usunąć zadanie o numerze id: ' + (id) + ' ?'" *ngIf="openModal">
   <div class="d-flex justify-content-end" #modalDiv>
 <!--    <input type="checkbox" #check (change)="0">-->
     <button class="btn btn-danger btn-sm mx-2" (click)="deleteTodo()">Usuń</button>

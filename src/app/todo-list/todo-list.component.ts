@@ -50,12 +50,24 @@ export class TodoListComponent implements OnInit, OnDestroy{
     this.errorMessage = '';
   }
 
-  deleteTodo(i: number) {
-    this.todoService.deleteTodo(i);
+  deleteTodo(id: number) {
+    this.todoApiService.deleteTodo(id).subscribe({
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
+      }
+    })
   }
 
-  changeTodoStatus(index: number) {
-    this.todoService.changeTodoStatus(index);
+  changeTodoStatus(id: number, todo: Todo) {
+    // this.todoService.changeTodoStatus(id);
+    this.todoApiService.patchTodo(id, {isComplete: !todo.isComplete}).subscribe({
+      next: value => {
+        console.log(value)
+      },
+      error: err => {
+        this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
+      }
+    });
   }
 
   ngOnDestroy(): void {

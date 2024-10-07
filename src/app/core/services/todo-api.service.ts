@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable, tap} from "rxjs";
 import {Todo} from "../../shared/interfaces/todo.interface";
 import {TodoService} from "./todo.service";
+import {rename} from "node:fs";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,18 @@ export class TodoApiService {
     return this.http.post<Todo>('http://localhost:3000/todo', todo).pipe(
       tap((todo) => this.todoService.addTodo(todo))
     );
+  }
+
+  deleteTodo(id: number): Observable<{}> {
+    return this.http.delete<{}>(`http://localhost:3000/todo/${id}`).pipe(
+      tap(() => {this.todoService.deleteTodo(id)})
+    );
+  }
+
+  patchTodo(id: number, todo: Omit<Todo, 'id' | 'name'>): Observable<Todo> {
+    return this.http.patch<Todo>(`http://localhost:3000/todo/${id}`, todo).pipe(
+      tap((todo) => this.todoService.changeTodoStatus())
+    )
   }
 
 }
