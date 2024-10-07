@@ -15,7 +15,8 @@ import {TodoApiService} from "../core/services/todo-api.service";
 export class TodoListComponent implements OnInit, OnDestroy{
   todoService = inject(TodoService);
   todoApiService = inject(TodoApiService)
-  todos: Todo[] = this.todoService.getTodos;
+
+  todos: Todo[] = this.todoService.todos;
   errorMessage = '';
   sub !: Subscription;
 
@@ -24,15 +25,12 @@ export class TodoListComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-    this.sub = this.todoService.todoChange.subscribe({
+    this.sub = this.todoService.todoChanged.subscribe({
       next: todoList => this.todos = todoList
     });
 
     if (this.todos.length === 0) {
       this.todoApiService.getTodos().subscribe({
-        next: todos => {
-          // this.todos = todos;
-        },
         error: err => {
           this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
         }
@@ -46,7 +44,6 @@ export class TodoListComponent implements OnInit, OnDestroy{
         this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
       }
     });
-    // this.todos = this.todoService.getTodos;
   }
 
   clearErrorMessage() {
@@ -57,12 +54,8 @@ export class TodoListComponent implements OnInit, OnDestroy{
     this.todoService.deleteTodo(i);
   }
 
-  changeToDoStatus(index: number) {
-    this.todoService.changeToDoStatus(index);
-  }
-
-  clearAllTodos() {
-    this.todoService.clearAllTodos();
+  changeTodoStatus(index: number) {
+    this.todoService.changeTodoStatus(index);
   }
 
   ngOnDestroy(): void {
