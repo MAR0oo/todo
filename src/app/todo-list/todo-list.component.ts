@@ -5,9 +5,6 @@ import {Todo} from "../shared/interfaces/todo.interface";
 import {TodoService} from "../core/services/todo.service";
 import {Subscription} from "rxjs";
 import {TodoApiService} from "../core/services/todo-api.service";
-import {subscribe} from "node:diagnostics_channel";
-import {error} from "@angular/compiler-cli/src/transformers/util";
-
 
 @Component({
   selector: 'app-todo-list',
@@ -23,6 +20,7 @@ export class TodoListComponent implements OnInit, OnDestroy{
   sub !: Subscription;
 
   constructor() {}
+  // constructor(private todoService: TodoService, private todoApiService: TodoApiService) {}
 
 
   ngOnInit(): void {
@@ -33,7 +31,7 @@ export class TodoListComponent implements OnInit, OnDestroy{
     if (this.todos.length === 0) {
       this.todoApiService.getTodos().subscribe({
         next: todos => {
-          this.todos = todos;
+          // this.todos = todos;
         },
         error: err => {
           this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
@@ -44,14 +42,10 @@ export class TodoListComponent implements OnInit, OnDestroy{
 
   addTodo(todo: string) : void {
     this.todoApiService.postTodo({name: todo, isComplete: false}).subscribe({
-      next: value => {
-        console.log(value)
-      },
       error: err => {
         this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
       }
-    })
-    this.todoService.addTodo(todo);
+    });
     // this.todos = this.todoService.getTodos;
   }
 

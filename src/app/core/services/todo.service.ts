@@ -11,10 +11,10 @@ export class TodoService {
 
   constructor() {
     // Sprawdź czy localStorage jest dostępny
-    if (typeof localStorage !== 'undefined') {
-      // this._todos = JSON.parse(localStorage.getItem('todos')!) ?? [];
-      this._todos = [];
-    }
+    // if (typeof localStorage !== 'undefined') {
+    //   // this._todos = JSON.parse(localStorage.getItem('todos')!) ?? [];
+    //   this._todos = [];
+    // }
   }
 
   public set todos(arrTodos: Todo[]) {
@@ -30,10 +30,9 @@ export class TodoService {
     return this.getTodos[index];
   }
 
-  addTodo(todo: string) : void {
-    // this._todos.push({name: todo, isComplete: false});
-    this.saveToLocalStorage();
-    this.todoChange.next(this.getTodos);
+  addTodo(todo: Todo) : void {
+    this._todos.push(todo);
+    this.todoChange.next(this.todos);
   }
 
   deleteTodo(i: number) {
