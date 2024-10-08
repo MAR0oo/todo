@@ -18,6 +18,10 @@ export class TodoApiService {
     );
   }
 
+  getTodo(id: number): Observable<Todo> {
+    return this.http.get<Todo>(`http://localhost:3000/todo/${id}`)
+  }
+
   postTodo(todo: Omit<Todo, "id">): Observable<Todo> {
     return this.http.post<Todo>('http://localhost:3000/todo', todo).pipe(
       tap((todo) => this.todoService.addTodo(todo))
@@ -32,7 +36,7 @@ export class TodoApiService {
 
   patchTodo(id: number, todo: Omit<Todo, 'id' | 'name'>): Observable<Todo> {
     return this.http.patch<Todo>(`http://localhost:3000/todo/${id}`, todo).pipe(
-      tap((todo) => this.todoService.changeTodoStatus())
+      tap((todo) => this.todoService.changeTodoStatus(todo.id, todo.isComplete))
     )
   }
 
