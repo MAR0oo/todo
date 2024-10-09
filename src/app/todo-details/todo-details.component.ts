@@ -15,6 +15,7 @@ export class TodoDetailsComponent implements OnInit{
 
   todo: Todo | undefined;
   id!: number;
+  errorMessage = '';
 
   constructor(
     private todoService: TodoService,
@@ -36,17 +37,22 @@ export class TodoDetailsComponent implements OnInit{
 
     this.route.paramMap.subscribe(params => {
       this.id = Number(params.get('id'));
+      console.log(params.get('id'));
       // this.todo = this.todoService.getTodo(this.id);
     })
 
     this.route.paramMap.pipe(
-      switchMap((params) => this.todoApiService.getTodo(Number(params.get('id'))))
+      switchMap((params) => this.todoApiService.getTodo(<string>params.get('id')))
     ).subscribe({
-      next: value => {
-        console.log(value)
+      next: todo => {
+        this.todo = {...todo}
       },
       error: err => {
-        console.log(err)
+        if(err.status === 404) {
+          this.errorMessage = 'Nie ma zadania o podanym numerze id';
+        } else {
+          this.errorMessage = 'Wystąpił błąd spróbuj ponownie';
+        }
       }
     })
 
@@ -65,5 +71,9 @@ export class TodoDetailsComponent implements OnInit{
 
   navigateBack() {
     this.location.back();
+  }
+
+  clearErrorMessage() {
+    this.errorMessage = '';
   }
 }

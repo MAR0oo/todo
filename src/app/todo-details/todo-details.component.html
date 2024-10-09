@@ -1,7 +1,8 @@
 <div class="mt-3">
-  <p *ngIf="!todo">Nie ma zadania o podanym numerze indeksu!</p>
 
-  <div *ngIf="todo">
+  <app-alert *ngIf="errorMessage" [errorMessage]="errorMessage" (clearMessage)="clearErrorMessage()"></app-alert>
+
+  <div *ngIf="todo && !errorMessage">
     <p>Treść zadania: {{ todo.name }}</p>
     <p>Czy zadanie zostałl ukończone: {{ todo.isComplete ? 'tak' : 'nie' }}</p>
 
